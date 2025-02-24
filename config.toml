@@ -1,0 +1,5 @@
+[theme]
+base="dark" 
+backgroundColor="#800080"  # Replace with your color
+secondaryBackgroundColor="#f0f0f0"  # Sidebar/Nav background color
+textColor="#ffffff"
