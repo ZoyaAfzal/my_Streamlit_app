@@ -101,13 +101,55 @@ sns.set_theme(style="darkgrid")
 st.markdown(
     """
     <style>
-        body { background-color: #121212; color: white; }
+        body { background-color: #DDA0DD; color: white; }
         .stApp { background-color: #121212; }
-        .sidebar .sidebar-content { background-color: #1E1E1E; color: white; }
         .stButton > button { border-radius: 10px; font-weight: bold; padding: 10px 15px; background-color: #FF5722; color: white; border: none; cursor: pointer; }
         .stButton > button:hover { background-color: #FFC107; color: black; transform: scale(1.05); }
-        .stDataFrame { background-color: #222; color: white; }
+        .stDataFrame { background-color: #DDA0DD; color: white; }
+        [data-testid="stSidebar"] {
+            background-color: #DDA0DD;
+        }
+        [data-testid="stSidebar"] * {
+            color: white !important;
+        }
+        div[data-testid="stSidebar"] label {
+            color: white !important;
+        }
+        div.stRadio label {
+            color: white !important;
+        }
+        div.stNumberInput label {
+            color: white !important;
+        }
+        div.stAlert {
+            color: white !important;
+        }
+            h1 {
+            text-align: center;
+            font-size: 36px;
+            color: #800080; /* Purple color */
+        }
+        @keyframes glow {
+            100% { color: rgb(155, 55, 119); }
+            0% { color: rgb(73, 46, 173); } 
+        }
+        .glow-text {
+            animation: glow 1.5s infinite alternate;
+        }
+        [data-testid="stSidebar"] {
+            background-color: #8B5081 !important; 
+        }
+        [data-testid="stSidebarNav"] {
+            background-color: #800080 !important; 
+        }
+        h2, h3 , h5, h6 {
+            color: #ffffff !important;  /* Ensure headings stay visible */
+        }
         div[data-testid="stFileUploader"] { background-color: black !important; color: white !important; border: 2px solid white !important; padding: 10px; border-radius: 10px; text-align: center; }
+        div.stFileUploader label {
+            color: white !important;
+            font-weight: bold;
+        }
     </style>
     """,
     unsafe_allow_html=True,
@@ -146,7 +188,20 @@ if page == "🏠 Home":
     """, unsafe_allow_html=True)
 
 elif page == "📂 Upload & Transform":
-    st.title("📂 Upload & Transform Data")
+    st.markdown("""
+    <h1 style='text-align: center; font-size: 36px; color: #800080;'>
+        📂 <span class='glow-text'>Upload & Transform Data</span>
+    </h1>
+    <style>
+        @keyframes glow {
+            100% { color: rgb(155, 55, 119); }
+            0% { color: rgb(73, 46, 173); } 
+        }
+        .glow-text {
+            animation: glow 1.5s infinite alternate;
+        }
+    </style>
+                """, unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Choose a CSV or Excel file", type=["csv", "xlsx"])
     
     if uploaded_file:
@@ -165,7 +220,21 @@ elif page == "📂 Upload & Transform":
         st.write(st.session_state.df.isnull().sum())
 
 elif page == "🛠️ Data Cleaner":
-    st.title("🛠️ Data Cleaning")
+    st.markdown("""
+    <h1 style='text-align: center; font-size: 36px; color: #800080;'>
+        🛠️ <span class='glow-text'>Data Cleaning</span>
+    </h1>
+    <style>
+        @keyframes glow {
+            100% { color: rgb(155, 55, 119); }
+            0% { color: rgb(73, 46, 173); } 
+        }
+        .glow-text {
+            animation: glow 1.5s infinite alternate;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
     if st.session_state.df is not None:
         clean_option = st.radio("Select Cleaning Method", ["Fill Missing Values", "Drop Missing Values"])
         
@@ -184,10 +253,29 @@ elif page == "🛠️ Data Cleaner":
         st.subheader("Cleaned Data Preview")
         st.dataframe(st.session_state.df.head())
     else:
-        st.warning("⚠️ Please upload a dataset first.")
+        st.markdown("""
+    <div style='background-color: #8B5081; padding: 10px; border-radius: 5px;'>
+        <h4 style='color: #F3EDF2;'>⚠️ Warning: Please upload a dataset first.</h4>
+    </div>
+""", unsafe_allow_html=True)
+
 
 elif page == "📊 Insights & Visualization":
-    st.title("📊 Data Insights & Visualization")
+    st.markdown("""
+    <h1 style='text-align: center; font-size: 36px; color: #800080;'>
+        📊 <span class='glow-text'>Data Insights & Visualization</span>
+    </h1>
+    <style>
+        @keyframes glow {
+            100% { color: rgb(155, 55, 119); }
+            0% { color: rgb(73, 46, 173); } 
+        }
+        .glow-text {
+            animation: glow 1.5s infinite alternate;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
     if st.session_state.df is not None:
         st.subheader("Data Preview")
         st.dataframe(st.session_state.df.head())
@@ -198,8 +286,11 @@ elif page == "📊 Insights & Visualization":
         sns.barplot(x=st.session_state.df.columns[0], y=st.session_state.df.iloc[:, 1], data=st.session_state.df, ax=ax, palette="rocket")
         st.pyplot(fig)
     else:
-        st.warning("⚠️ Please upload a dataset first.")
-
+        st.markdown("""
+    <div style='background-color: #8B5081 ; padding: 10px; border-radius: 5px;'>
+        <h4 style='color: #F3EDF2;'>⚠️ Warning: Please upload a dataset first.</h4>
+    </div>
+""", unsafe_allow_html=True)
 
 
 
