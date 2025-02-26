@@ -84,8 +84,7 @@ if uploaded_files:
                 )
 
 
-st.success("🎉 All files processed!") 
-'''
+st.success("🎉 All files processed!") '''
 
 import streamlit as st
 import pandas as pd
@@ -97,14 +96,14 @@ import seaborn as sns
 st.set_page_config(page_title="Smart Data Transformer", layout="wide")
 sns.set_theme(style="darkgrid")
 
+
 # Custom CSS for Full Dark Theme
 st.markdown(
     """
     <style>
         body { background-color: #DDA0DD; color: white; }
+        header { background-color: #121212; colo: white; !important}
         .stApp { background-color: #121212; }
-        .stButton > button { border-radius: 10px; font-weight: bold; padding: 10px 15px; background-color: #FF5722; color: white; border: none; cursor: pointer; }
-        .stButton > button:hover { background-color: #FFC107; color: black; transform: scale(1.05); }
         .stDataFrame { background-color: #DDA0DD; color: white; }
         [data-testid="stSidebar"] {
             background-color: #DDA0DD;
@@ -143,20 +142,51 @@ st.markdown(
             background-color: #800080 !important; 
         }
         h2, h3 , h5, h6 {
-            color: #ffffff !important;  /* Ensure headings stay visible */
+            color: #ffffff !important; /
         }
         div[data-testid="stFileUploader"] { background-color: black !important; color: white !important; border: 2px solid white !important; padding: 10px; border-radius: 10px; text-align: center; }
         div.stFileUploader label {
             color: white !important;
             font-weight: bold;
         }
+        .stButton > button {
+    border-radius: 10px;
+    font-weight: bold;
+    padding: 10px 15px;
+    background-color: #8B5081;  /* Apply purple color */
+    color: white;
+    border: none;
+    cursor: pointer;
+        }
+
+        .stButton > button:hover {
+    background-color:  #800080;  /* Slightly lighter purple for hover effect */
+    color: white;
+    transform: scale(1.05);
+        }
+        [data-testid="stHeader"] {
+            background-color:  #121212 !important;
+            color: white !important;
+        }
+        
+        /* Change table background to light black */
+        [data-testid="stDataFrame"] {
+            background-color:  #121212 !important;  /* Light black */
+            color: white !important;
+        }
+        
+        /* Make sidebar background purple */
+        [data-testid="stSidebar"] {
+            background-color: #8B5081 !important; 
+        }
     </style>
-    """,
-    unsafe_allow_html=True,
+    
+""",
+    unsafe_allow_html=True
 )
 
 # Sidebar Navigation
-st.sidebar.title("🔍 Navigation")
+st.sidebar.title("🔍 Data Transformer")
 page = st.sidebar.radio("Go to", ["🏠 Home", "📂 Upload & Transform", "🛠️ Data Cleaner", "📊 Insights & Visualization"])
 
 # Initialize df in session_state if it doesn't exist
@@ -219,7 +249,7 @@ elif page == "📂 Upload & Transform":
         st.subheader("⚠️ Missing Values")
         st.write(st.session_state.df.isnull().sum())
 
-elif page == "🛠️ Data Cleaner":
+if page == "🛠️ Data Cleaner":
     st.markdown("""
     <h1 style='text-align: center; font-size: 36px; color: #800080;'>
         🛠️ <span class='glow-text'>Data Cleaning</span>
@@ -232,16 +262,30 @@ elif page == "🛠️ Data Cleaner":
         .glow-text {
             animation: glow 1.5s infinite alternate;
         }
+        div[data-testid="stRadio"] > label {
+            color: white !important;
+        }
+        div[data-testid="stRadio"] label p {
+            color: white !important;
+        }
     </style>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     if st.session_state.df is not None:
-        clean_option = st.radio("Select Cleaning Method", ["Fill Missing Values", "Drop Missing Values"])
-        
+        st.subheader("🛠️ Data Cleaning Options")
+
+        clean_option = st.radio("Select Cleaning Method", 
+                                ["Fill Missing Values", "Drop Missing Values"], 
+                                key="clean_method")
+
         if clean_option == "Fill Missing Values":
-            fill_value = st.number_input("Enter value to fill missing data:", value=0)
-            st.session_state.df.fillna(fill_value, inplace=True)
-            st.success("Missing values filled!")
+            fill_value = st.number_input("Enter value to fill missing data:", value=0, key="fill_value")
+            if st.button("Apply Changes", key="fill_missing_btn"): 
+                st.session_state.df = st.session_state.df.fillna(fill_value)  # Update session state
+                st.session_state.df_updated = True
+                st.success("Missing values filled!")
+                st.dataframe(st.session_state.df.head())
+        
         elif clean_option == "Drop Missing Values":
             drop_option = st.radio("Drop rows or columns?", ["Rows", "Columns"])
             if drop_option == "Rows":
@@ -249,15 +293,15 @@ elif page == "🛠️ Data Cleaner":
             else:
                 st.session_state.df.dropna(axis=1, inplace=True)
             st.success("Missing values dropped!")
-        
-        st.subheader("Cleaned Data Preview")
-        st.dataframe(st.session_state.df.head())
+            st.dataframe(st.session_state.df.head())
+
     else:
         st.markdown("""
     <div style='background-color: #8B5081; padding: 10px; border-radius: 5px;'>
         <h4 style='color: #F3EDF2;'>⚠️ Warning: Please upload a dataset first.</h4>
     </div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+
 
 
 elif page == "📊 Insights & Visualization":
@@ -291,14 +335,3 @@ elif page == "📊 Insights & Visualization":
         <h4 style='color: #F3EDF2;'>⚠️ Warning: Please upload a dataset first.</h4>
     </div>
 """, unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-
-
-
